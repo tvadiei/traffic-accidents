@@ -2,7 +2,7 @@
 class Database {
     private static $host = "localhost";
     private static $user = "root";
-    private static $pass = "Toktam82@";
+    private static $pass = "";
     private static $dbname = "traffic_db";
     private static $conn = null;
 
