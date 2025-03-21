@@ -1,32 +1,65 @@
 (() => {
     const bundeslandMap = {
-        "1": "Burgenland", "2": "Kärnten", "3": "Niederösterreich",
-        "4": "Oberösterreich", "5": "Salzburg", "6": "Steiermark",
-        "7": "Tirol", "8": "Vorarlberg", "9": "Wien"
+        "1": "Burgenland",
+        "2": "Kärnten",
+        "3": "Niederösterreich",
+        "4": "Oberösterreich",
+        "5": "Salzburg",
+        "6": "Steiermark",
+        "7": "Tirol",
+        "8": "Vorarlberg",
+        "9": "Wien"
     };
 
     const stateColors = {
-        "1": { bg: "rgba(0, 51, 153, 0.5)", border: "#003399" },
-        "2": { bg: "rgba(153, 51, 153, 0.5)", border: "#993399" },
-        "3": { bg: "rgba(255, 255, 153, 0.5)", border: "#FFFF99" },
-        "4": { bg: "rgba(102, 204, 255, 0.5)", border: "#66CCFF" },
-        "5": { bg: "rgba(0, 102, 153, 0.5)", border: "#006699" },
-        "6": { bg: "rgba(102, 204, 102, 0.5)", border: "#66CC66" },
-        "7": { bg: "rgba(255, 204, 51, 0.5)", border: "#FFCC33" },
-        "8": { bg: "rgba(204, 51, 51, 0.5)", border: "#CC3333" },
-        "9": { bg: "rgba(204, 204, 204, 0.5)", border: "#CCCCCC" }
+        "1": {
+            bg: "rgba(0, 51, 153, 0.5)",
+            border: "#003399"
+        },
+        "2": {
+            bg: "rgba(153, 51, 153, 0.5)",
+            border: "#993399"
+        },
+        "3": {
+            bg: "rgba(255, 255, 153, 0.5)",
+            border: "#FFFF99"
+        },
+        "4": {
+            bg: "rgba(102, 204, 255, 0.5)",
+            border: "#66CCFF"
+        },
+        "5": {
+            bg: "rgba(0, 102, 153, 0.5)",
+            border: "#006699"
+        },
+        "6": {
+            bg: "rgba(102, 204, 102, 0.5)",
+            border: "#66CC66"
+        },
+        "7": {
+            bg: "rgba(255, 204, 51, 0.5)",
+            border: "#FFCC33"
+        },
+        "8": {
+            bg: "rgba(204, 51, 51, 0.5)",
+            border: "#CC3333"
+        },
+        "9": {
+            bg: "rgba(204, 204, 204, 0.5)",
+            border: "#CCCCCC"
+        }
     };
 
     let chartInstance = null;
 
     async function fetchData(filters = {}) {
-        console.log("filters", filters);
+
         const queryString = new URLSearchParams(filters).toString();
-        console.log(queryString);
+
         try {
             const response = await fetch(`/config/routes.php?${queryString}`);
             const data = await response.json();
-            console.log("data2".data);
+
             createChart(data);
         } catch (error) {
             console.error("Error in fetching data", error);
@@ -43,16 +76,16 @@
             Verkehrsart_ID: Array.from(document.getElementById("Verkehrsart_ID")?.selectedOptions || [])
                 .map(opt => opt.value).join(",")
         };
-    
+
 
         filters = Object.fromEntries(Object.entries(filters).filter(([_, value]) => value !== ""));
-    
-        
+
+
         fetchData(filters);
     }
 
     async function createChart(data) {
-        console.log(data);
+
         const aggregatedData = {};
         const years = new Set();
 
@@ -99,14 +132,20 @@
                 plugins: {
                     legend: {
                         position: "top",
-                        labels: { font: { size: 12 } }
+                        labels: {
+                            font: {
+                                size: 12
+                            }
+                        }
                     },
                     title: {
                         display: true,
                         text: "Getötete im Straßenverkehr in Österreich nach Bundesland und Berichtsjahr",
-                        font: { size: 18 }
+                        font: {
+                            size: 18
+                        }
                     },
-                    datalabels:{
+                    datalabels: {
                         display: true,
                         anchor: "end",
                         align: "top",
@@ -125,19 +164,31 @@
                 },
                 scales: {
                     x: {
-                        title: { display: true, text: "Berichtsjahr", font: { size: 14 } }
+                        title: {
+                            display: true,
+                            text: "Berichtsjahr",
+                            font: {
+                                size: 14
+                            }
+                        }
                     },
                     ticks: {
                         font: {
-                            size: 12 
+                            size: 12
                         }
                     },
                     y: {
-                        title: { display: true, text: "Getötete", font: { size: 14 } },
-                        
+                        title: {
+                            display: true,
+                            text: "Getötete",
+                            font: {
+                                size: 14
+                            }
+                        },
+
                         ticks: {
                             font: {
-                                size: 12 
+                                size: 12
                             }
                         },
                         stacked: true
