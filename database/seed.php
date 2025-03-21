@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 $conn = Database::connect();
 $api_url = "https://dashboards.kfv.at/api/udm_verkehrstote/json";
 
-// Fetch API data
+
 $response = file_get_contents($api_url);
 if (!$response) {
     file_put_contents("../logs/errors.log", "API fetch error: " . date("Y-m-d H:i:s") . "\n", FILE_APPEND);
@@ -16,7 +16,7 @@ if (!$data || !isset($data['verkehrstote'])) {
     die("Invalid API response format!");
 }
 
-// Clear existing data
+
 $conn->query("TRUNCATE TABLE accidents");
 
 foreach ($data['verkehrstote'] as $entry) {

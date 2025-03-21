@@ -7,49 +7,51 @@ class Accident {
     public function __construct() {
         $this->conn = Database::connect();
     }
-
-    public function getFilteredData($year, $month, $gender, $day, $traffic) {
+    public function getFilteredData($filters) {
         $conditions = [];
         $params = [];
-
-        if (!empty($year)) {
-            $conditions[] = "Berichtsjahr = ?";
-            $params[] = $year;
-        }
-        if (!empty($gender)) {
+        $types = ""; 
+    
+        if (!empty($filters['Geschlecht_ID'])) {
             $conditions[] = "Geschlecht_ID = ?";
-            $params[] = $gender;
+            $params[] = $filters['Geschlecht_ID'];
+            $types .= "i"; 
         }
-        if (!empty($month)) {
-            $conditions[] = "Monat_ID IN (" . implode(",", array_fill(0, count($month), "?")) . ")";
-            $params = array_merge($params, $month);
+        if (!empty($filters['Monat_ID'])) {
+            $conditions[] = "Monat_ID IN (" . implode(",", array_fill(0, count($filters['Monat_ID']), "?")) . ")";
+            $params = array_merge($params, $filters['Monat_ID']);
+            $types .= str_repeat("i", count($filters['Monat_ID'])); 
         }
-        if (!empty($day)) {
-            $conditions[] = "Wochentag_ID IN (" . implode(",", array_fill(0, count($day), "?")) . ")";
-            $params = array_merge($params, $day);
+        if (!empty($filters['Wochentag_ID'])) {
+            $conditions[] = "Wochentag_ID IN (" . implode(",", array_fill(0, count($filters['Wochentag_ID']), "?")) . ")";
+            $params = array_merge($params, $filters['Wochentag_ID']);
+            $types .= str_repeat("i", count($filters['Wochentag_ID'])); 
         }
-        if (!empty($traffic)) {
-            $conditions[] = "Verkehrsart_ID IN (" . implode(",", array_fill(0, count($traffic), "?")) . ")";
-            $params = array_merge($params, $traffic);
+        if (!empty($filters['Verkehrsart_ID'])) {
+            $conditions[] = "Verkehrsart_ID IN (" . implode(",", array_fill(0, count($filters['Verkehrsart_ID']), "?")) . ")";
+            $params = array_merge($params, $filters['Verkehrsart_ID']);
+            $types .= str_repeat("i", count($filters['Verkehrsart_ID'])); 
         }
-
-        $query = "SELECT Berichtsjahr, COUNT(*) as count FROM accidents";
+    
+        $query = "SELECT Berichtsjahr, Bundesland_ID, SUM(Getötete) AS fatalities FROM accidents";
         if (!empty($conditions)) {
             $query .= " WHERE " . implode(" AND ", $conditions);
         }
-        $query .= " GROUP BY Berichtsjahr";
-
+        $query .= " GROUP BY Berichtsjahr, Bundesland_ID";
+    
         $stmt = $this->conn->prepare($query);
         if (!empty($params)) {
-            $stmt->bind_param(str_repeat('i', count($params)), ...$params);
+            $stmt->bind_param($types, ...$params); 
         }
+    
         $stmt->execute();
         $result = $stmt->get_result();
-
+    
         $data = [];
         while ($row = $result->fetch_assoc()) {
             $data[] = $row;
         }
+    
         return $data;
     }
 }

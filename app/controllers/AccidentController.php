@@ -8,18 +8,32 @@ class AccidentController {
         $this->accidentModel = new Accident();
     }
 
-    public function index() {
-        header("Content-Type: application/json");
-        header("Access-Control-Allow-Origin: *");
+public function index()
+{
+    $gender = $_GET['Geschlecht_ID'] ?? null;
+    $months = $_GET['Monat_ID'] ?? null;
+    $days = $_GET['Wochentag_ID'] ?? null;
+    $trafficTypes = $_GET['Verkehrsart_ID'] ?? null;
 
-        $year = $_GET['year'] ?? null;
-        $month = isset($_GET['month']) ? explode(',', $_GET['month']) : [];
-        $gender = $_GET['gender'] ?? null;
-        $day = isset($_GET['day']) ? explode(',', $_GET['day']) : [];
-        $traffic = isset($_GET['traffic']) ? explode(',', $_GET['traffic']) : [];
-
-        $data = $this->accidentModel->getFilteredData($year, $month, $gender, $day, $traffic);
-        echo json_encode($data);
+    $filters = [];
+    if ($gender) {
+        $filters['Geschlecht_ID'] = $gender;
     }
+    if ($months) {
+        $filters['Monat_ID'] = explode(',', $months);
+    }
+    if ($days) {
+        $filters['Wochentag_ID'] = explode(',', $days); 
+    }
+    if ($trafficTypes) {
+        $filters['Verkehrsart_ID'] = explode(',', $trafficTypes); 
+    }
+
+    $accidentModel = new Accident();
+    $data = $accidentModel->getFilteredData($filters);
+
+    header('Content-Type: application/json');
+    echo json_encode($data);
+}
 }
 ?>
