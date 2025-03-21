@@ -43,7 +43,7 @@ This project allows flexibility in choosing the programming language, libraries,
 - 🗃️ **MySQL** — Relational database for storing traffic accident data
 - 🎨 **HTML5 + CSS3** — Responsive UI and custom styling
 - 📊 **Chart.js** — Interactive and dynamic chart rendering
-- 🧠 **JavaScript ** — Client-side logic for filters and data handling
+- 🧠 **JavaScript** — Client-side logic for filters and data handling
 - 🕰️ **Cron (Optional)** — Automated daily updates from the live API
 
 - ## 🚀 Getting Started
